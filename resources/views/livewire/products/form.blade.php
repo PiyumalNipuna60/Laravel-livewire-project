@@ -13,8 +13,9 @@
                             type="text"
                             id="product_name"
                             wire:model="product_name"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            class="mt-1 block w-full rounded-md border-red-500 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Enter product name"
+                            style="border: 1px solid {{ $errors->has('product_name') ? 'red' : '#ebedf0' }};"
                         >
                         @error('product_name') 
                             <span class="text-sm text-red-600">{{ $message }}</span>
@@ -29,6 +30,7 @@
                             wire:model="sku"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Enter SKU"
+                            style="border: 1px solid {{ $errors->has('product_name') ? 'red' : '#ebedf0' }};"
                             {{ $product ? 'readonly' : '' }}
                         >
                         @error('sku') 
@@ -45,6 +47,7 @@
                             min="0"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Enter quantity"
+                            style="border: 1px solid {{ $errors->has('product_name') ? 'red' : '#ebedf0' }};"
                         >
                         @error('quantity') 
                             <span class="text-sm text-red-600">{{ $message }}</span>
@@ -65,6 +68,7 @@
                                 step="0.01"
                                 class="block w-full rounded-md border-gray-300 pl-7 focus:border-blue-500 focus:ring-blue-500"
                                 placeholder="0.00"
+                                style="border: 1px solid {{ $errors->has('product_name') ? 'red' : '#ebedf0' }};"
                             >
                         </div>
                         @error('price') 
@@ -80,6 +84,7 @@
                             rows="3"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             placeholder="Enter product description"
+                            style="border: 1px solid {{ $errors->has('product_name') ? 'red' : '#ebedf0' }};"
                         ></textarea>
                         @error('description') 
                             <span class="text-sm text-red-600">{{ $message }}</span>
