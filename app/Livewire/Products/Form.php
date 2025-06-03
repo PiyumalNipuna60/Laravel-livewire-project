@@ -3,29 +3,26 @@
 namespace App\Livewire\Products;
 
 use App\Models\Product;
-use Illuminate\Validation\Rule;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
-use LivewireUI\Modal\ModalComponent;
-use WireElements\Pro\Components\Modal\Modal;
+use Livewire\Attributes\Rule;
 
-class Form extends Modal
+class Form extends Component
 {
     public ?Product $product = null;
-
-    #[Validate('required|string|max:255')]
+    
+    #[Rule('required|string|max:255')]
     public $product_name = '';
-
-    #[Validate(['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\-]+$/'])]
+    
+    #[Rule(['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\-]+$/'])]
     public $sku = '';
-
-    #[Validate('required|integer|min:0')]
+    
+    #[Rule('required|integer|min:0')]
     public $quantity = 0;
-
-    #[Validate('required|numeric|min:0.01')]
+    
+    #[Rule('required|numeric|min:0.01')]
     public $price = 0.00;
-
-    #[Validate('nullable|string')]
+    
+    #[Rule('nullable|string')]
     public $description = '';
 
     public function mount($productId = null)
@@ -58,36 +55,31 @@ class Form extends Modal
             ];
 
             if ($this->product) {
-                // Additional validation for update
-                $this->validate([
-                    'sku' => [
-                        Rule::unique('products')->ignore($this->product->id),
-                    ],
-                ]);
-                
                 $this->product->update($data);
-                session()->flash('success', 'Product updated successfully.');
-            } else {
-                // Additional validation for create
-                $this->validate([
-                    'sku' => [
-                        Rule::unique('products'),
-                    ],
+                $this->dispatch('notify', [
+                    'type' => 'success',
+                    'message' => 'Product "' . $this->product_name . '" has been updated successfully.'
                 ]);
-                
+            } else {
                 Product::create($data);
-                session()->flash('success', 'Product created successfully.');
+                $this->dispatch('notify', [
+                    'type' => 'success',
+                    'message' => 'Product "' . $this->product_name . '" has been saved successfully.'
+                ]);
             }
 
-            $this->dispatch('product-created');
-            $this->dispatch('close-modal', 'product-form');
+            return redirect()->route('products.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Error saving product: ' . $e->getMessage());
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Error ' . ($this->product ? 'updating' : 'saving') . ' product: ' . $e->getMessage()
+            ]);
         }
     }
 
     public function render()
     {
-        return view('livewire.products.form');
+        return view('livewire.products.form')
+            ->layout('layouts.app');
     }
 }

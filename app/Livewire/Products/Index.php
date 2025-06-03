@@ -23,6 +23,12 @@ class Index extends Component
         'perPage' => ['except' => 10],
     ];
 
+
+    public function btnAddProduct()
+    {
+        return redirect()->route('products.create');
+    }
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -38,13 +44,40 @@ class Index extends Component
     {
         try {
             $product = Product::findOrFail($productId);
+            $productName = $product->product_name;
             $product->delete();
             
-            session()->flash('success', 'Product deleted successfully.');
+            $this->dispatch('notify', [
+                'type' => 'success',
+                'message' => 'Product "' . $productName . '" has been deleted successfully.'
+            ]);
             $this->dispatch('product-deleted');
         } catch (\Exception $e) {
-            session()->flash('error', 'Error deleting product: ' . $e->getMessage());
+            $this->dispatch('notify', [
+                'type' => 'error',
+                'message' => 'Error deleting product: ' . $e->getMessage()
+            ]);
         }
+    }
+
+    public function editProduct($productId)
+    {
+        return redirect()->route('products.edit', ['productId' => $productId]);
+    }
+
+    public function confirmDelete($productId)
+    {
+        $this->dispatch('open-modal', [
+            'component' => 'modal',
+            'arguments' => [
+                'title' => 'Confirm Delete',
+                'message' => 'Are you sure you want to delete this product?',
+                'confirmButtonText' => 'Delete',
+                'confirmButtonClass' => 'bg-red-600 hover:bg-red-700',
+                'action' => 'deleteProduct',
+                'actionParams' => ['productId' => $productId]
+            ]
+        ]);
     }
 
     #[On('product-created')]
@@ -61,6 +94,6 @@ class Index extends Component
                 })
                 ->orderBy($this->sortField, $this->sortDirection)
                 ->paginate($this->perPage)
-        ]);
+        ])->layout('layouts.app');
     }
 }

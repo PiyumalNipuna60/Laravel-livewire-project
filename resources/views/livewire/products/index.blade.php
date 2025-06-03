@@ -14,7 +14,7 @@
                         style="padding-left: 2.5rem; padding-right: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem; border-width: 1px; border-radius: 0.5rem; width: 95%;">
                 </div>
 
-                <button wire:click="$dispatch('open-modal', {component: 'product-form'})"
+                <button wire:click="btnAddProduct"
                     style="padding-left: 1rem; padding-right: 3rem; padding-top: 0.5rem; padding-bottom: 0.5rem; background-color: #2563eb; color: white; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: center;">
                     Add Product
                 </button>
@@ -159,14 +159,14 @@
                             style="padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 1rem; padding-bottom: 1rem; white-space: nowrap; text-align: right; font-size: 0.875rem; font-weight: 500; border-bottom-width: 1px; border-color: #e5e7eb;">
                             <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
                                 <button
-                                    wire:click="$dispatch('open-modal', {component: 'product-form', arguments: {productId: {{ $product->id }} }})"
+                                    wire:click="editProduct({{ $product->id }})"
                                     style="color: #2563eb;">
-                                    Edit
+                                    <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button wire:click="deleteProduct({{ $product->id }})"
                                     onclick="confirm('Are you sure you want to delete this product?') || event.stopImmediatePropagation()"
                                     style="color: #dc2626; margin-left: 0.5rem;">
-                                    Delete
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
                         </td>
